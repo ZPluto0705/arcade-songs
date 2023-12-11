@@ -1,15 +1,19 @@
 <script setup lang="ts">
 /* eslint-disable import/first, import/no-duplicates */
 import { ref, computed, provide, onMounted, useRoute, useRouter, useMeta as useHead, useContext } from '@nuxtjs/composition-api';
-import { useI18n } from 'nuxt-i18n-composable';
 import useGtag from '~/composables/useGtag';
-import useDataStore from '~/stores/data';
+import { useDataStore } from '~/stores/data';
 import useGameInfo from '~/composables/useGameInfo';
+import DataInfoBar from '~/components/DataInfoBar.vue';
+import SheetFilter from '~/components/SheetFilter.vue';
+import ModeSelector from '~/components/ModeSelector.vue';
+import SheetDrawerPanel from '~/components/SheetDrawerPanel.vue';
+import FilterInfoBar from '~/components/FilterInfoBar.vue';
+import SheetDataView from '~/components/SheetDataView.vue';
 import { buildEmptyFilters, buildFilterOptions, loadFiltersFromQuery, filterSheets } from '~/utils';
 import type { Sheet } from '~/types';
 
 const context = useContext();
-const i18n = useI18n();
 const gtag = useGtag();
 const route = useRoute();
 const router = useRouter();
@@ -22,7 +26,7 @@ const filterMode = ref('filter');
 const displayMode = ref('grid');
 
 const filters = ref(buildEmptyFilters());
-const filterOptions = computed(() => buildFilterOptions(data.value, i18n.t));
+const filterOptions = computed(() => buildFilterOptions(data.value, context.i18n));
 
 const filteredSheets = computed(
   () => filterSheets(data.value.sheets, filters.value),
@@ -34,6 +38,15 @@ const displayingSheets = computed(() => {
   if (filterMode.value === 'my-list') return selectedSheets.value;
   throw new Error('Invalid filter mode');
 });
+
+function toggleSheetSelection(sheet: Sheet) {
+  const index = selectedSheets.value.indexOf(sheet);
+  if (index === -1) {
+    selectedSheets.value.push(sheet);
+  } else {
+    selectedSheets.value.splice(index, 1);
+  }
+}
 
 onMounted(() => {
   const rawQuery = window.location.search.substring(1);
@@ -59,6 +72,7 @@ useHead(() => ({
 
 provide('drawingPool', displayingSheets);
 provide('selectedSheets', selectedSheets);
+provide('toggleSheetSelection', toggleSheetSelection);
 
 provide('filters', filters);
 provide('filterOptions', filterOptions);

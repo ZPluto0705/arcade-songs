@@ -1,16 +1,18 @@
 <script setup lang="ts">
 /* eslint-disable import/first, import/no-duplicates */
 import { ref, computed, watch, provide, onMounted, useRoute, useMeta as useHead, useContext } from '@nuxtjs/composition-api';
-import { useI18n } from 'nuxt-i18n-composable';
-import useDataStore from '~/stores/data';
+import { useDataStore } from '~/stores/data';
 import useGameInfo from '~/composables/useGameInfo';
+import LoadingOverlay from '~/components/LoadingOverlay.vue';
+import LocaleSwitcher from '~/components/LocaleSwitcher.vue';
+import SheetDialog from '~/components/dialogs/SheetDialog.vue';
+import SheetComboDialog from '~/components/dialogs/SheetComboDialog.vue';
 import LoadingStatus from '~/enums/LoadingStatus';
 import sites from '~/data/sites.json';
 import { PageNotFoundError } from '~/utils';
 
 const context = useContext();
 const route = useRoute();
-const i18n = useI18n();
 const dataStore = useDataStore();
 const {
   gameCode,
@@ -22,32 +24,32 @@ const {
 const menu = computed(() => [
   {
     icon: 'mdi-apps',
-    title: i18n.t('page-title.home'),
+    title: context.i18n.t('page-title.home'),
     to: { name: 'gameCode' },
   },
   {
     icon: 'mdi-script-text',
-    title: i18n.t('page-title.gallery'),
+    title: context.i18n.t('page-title.gallery'),
     to: { name: 'gameCode-gallery' },
   },
   {
     icon: 'mdi-database',
-    title: i18n.t('page-title.songs'),
+    title: context.i18n.t('page-title.songs'),
     to: { name: 'gameCode-songs' },
   },
   {
     icon: 'mdi-comment-question',
-    title: i18n.t('page-title.bug-report'),
+    title: context.i18n.t('page-title.bug-report'),
     href: context.$config.siteReportUrl,
   },
   {
     icon: 'mdi-github',
-    title: i18n.t('page-title.source-code'),
+    title: context.i18n.t('page-title.source-code'),
     href: context.$config.sourceCodeUrl,
   },
   {
     icon: 'mdi-information-outline',
-    title: i18n.t('page-title.about'),
+    title: context.i18n.t('page-title.about'),
     to: { name: 'gameCode-about' },
   },
 ]);
@@ -60,11 +62,11 @@ useHead(() => {
     siteDescriptionJp,
   } = context.$config;
 
-  const subSiteTitle = gameTitle.value ? `${gameTitle.value} | ${siteTitle}` : siteTitle;
+  const subSiteTitle = gameTitle.value != null ? `${gameTitle.value} | ${siteTitle}` : siteTitle;
   const pageUrl = new URL(`${gameCode.value ?? ''}/`, siteUrl).toString();
   const logoUrl = new URL('logo.png?v=1', siteUrl).toString();
-  const descriptionEn = String(siteDescriptionEn).replace('______', gameTitle.value || 'arcade games');
-  const descriptionJp = String(siteDescriptionJp).replace('______', gameTitle.value || '音ゲー');
+  const descriptionEn = String(siteDescriptionEn).replace('______', gameTitle.value ?? 'arcade games');
+  const descriptionJp = String(siteDescriptionJp).replace('______', gameTitle.value ?? '音ゲー');
 
   return {
     title: 'N/A',
@@ -116,7 +118,7 @@ function validateGameCode() {
 async function detectGameCode() {
   adaptSiteStyle();
   validateGameCode();
-  await dataStore.switchGameCode(gameCode.value!);
+  dataStore.gameCode = gameCode.value!;
 }
 
 watch(gameCode, () => detectGameCode());
@@ -197,7 +199,6 @@ export default defineComponent({
           :to="menuItem.to"
           :href="menuItem.href"
           :target="menuItem.href !== undefined ? '_blank' : undefined"
-          :disabled="menuItem.disabled"
           exact
         >
           <v-list-item-icon>
@@ -241,7 +242,7 @@ export default defineComponent({
               v-text="$config.siteTitle"
             />
             <v-list-item-subtitle
-              v-text="gameTitle || 'made by @zetaraku'"
+              v-text="gameTitle ?? 'made by @zetaraku'"
             />
           </v-list-item-content>
         </v-toolbar-title>

@@ -1,6 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import type { NuxtConfig } from '@nuxt/types';
-import fetch from 'node-fetch';
 import locales from './locales';
 import sites from './data/sites.json';
 import { Data } from './types';
@@ -39,7 +37,7 @@ const nuxtConfig: NuxtConfig = {
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  components: false,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [

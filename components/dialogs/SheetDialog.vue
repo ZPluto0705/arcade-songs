@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, inject, Ref } from '@nuxtjs/composition-api';
 import copyToClipboard from 'copy-to-clipboard';
-import useDataStore from '~/stores/data';
+import { useDataStore } from '~/stores/data';
 import useGtag from '~/composables/useGtag';
 import useGameInfo from '~/composables/useGameInfo';
 import useGameData from '~/composables/useGameData';
@@ -80,6 +80,7 @@ watch(isOpened, () => {
 
     <v-card>
       <v-img
+        :key="imageSrc"
         contain
         class="grey lighten-2"
         :class="{ 'rainbow-background': sheet.isSpecial }"
@@ -152,7 +153,7 @@ watch(isOpened, () => {
               class="text-truncate"
               style="margin-right: 80px;"
             >
-              <span>{{ (sheet.category || 'N/A').replaceAll('|', '｜') }}</span>
+              <span>{{ (sheet.category ?? 'N/A').replaceAll('|', '｜') }}</span>
             </h3>
 
             <!-- Title -->
@@ -176,7 +177,7 @@ watch(isOpened, () => {
               class="pb-2 text-truncate"
               style="margin-right: 42px;"
             >
-              <span>{{ sheet.artist || 'N/A' }}</span>
+              <span>{{ sheet.artist ?? 'N/A' }}</span>
             </h4>
 
             <!-- Difficulty & Level -->
@@ -209,14 +210,14 @@ watch(isOpened, () => {
             <!-- Note Designer -->
             <h4 class="pt-2 text-truncate">
               <span v-text="$t('term.noteDesigner')" />:
-              <span>{{ sheet.noteDesigner || 'N/A' }}</span>
+              <span>{{ sheet.noteDesigner ?? 'N/A' }}</span>
             </h4>
 
             <!-- Release Date & Version -->
             <h4 class="pt-2 text-truncate">
               <span v-text="$t('term.releaseDate')" />:
-              <span>{{ sheet.releaseDate || '????-??-??' }}</span>
-              <span>({{ sheet.version || 'N/A' }})</span>
+              <span>{{ sheet.releaseDate ?? '????-??-??' }}</span>
+              <span>({{ sheet.version ?? 'N/A' }})</span>
             </h4>
           </div>
 
@@ -242,7 +243,7 @@ watch(isOpened, () => {
             </v-tooltip>
 
             <!-- Unavailable in regions -->
-            <template v-for="({ region, name: regionName }, i) in data.regions">
+            <template v-for="{ region, name: regionName }, i in data.regions">
               <v-tooltip
                 v-if="sheet.regions && sheet.regions[region] === false"
                 :key="i"

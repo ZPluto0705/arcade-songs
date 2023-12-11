@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, provide, toRef } from '@nuxtjs/composition-api';
 import type { Sheet } from '~/types';
+import SheetDataGrid from './SheetDataGrid.vue';
+import SheetDataTable from './SheetDataTable.vue';
 
 const props = defineProps<{
   sheets: Sheet[];

@@ -1,16 +1,15 @@
 <script setup lang="ts">
 /* eslint-disable import/first, import/no-duplicates */
-import { inject, useMeta as useHead, Ref } from '@nuxtjs/composition-api';
-import { useI18n } from 'nuxt-i18n-composable';
+import { inject, useMeta as useHead, Ref, useContext } from '@nuxtjs/composition-api';
 import useGameInfo from '~/composables/useGameInfo';
 
 const isDarkMode: Ref<boolean> = inject('isDarkMode')!;
 
-const i18n = useI18n();
+const context = useContext();
 const { gameCode } = useGameInfo();
 
 useHead(() => ({
-  title: i18n.t('page-title.about') as string,
+  title: context.i18n.t('page-title.about') as string,
 }));
 </script>
 
@@ -63,6 +62,7 @@ export default defineComponent({
           <a href="http://maimai.wiki.fc2.com/" target="_blank">maimai wiki</a>
           (<a href="https://web.archive.org/web/20220327004356/https://maimai.wiki.fc2.com/" target="_blank">archive</a>)
           /
+          {{ /* eslint-disable-next-line no-irregular-whitespace */ }}
           <a href="https://gamerch.com/maimai/" target="_blank">maimai　攻略wiki | Gamerch</a>
           － {{ $t('page.about.sheetInfoDescription') }}
         </li>
@@ -98,6 +98,8 @@ export default defineComponent({
         <li>
           {{ $t('page.about.sheetInfo') }} －
           <a href="https://gamerch.com/chunithm/" target="_blank">CHUNITHM【チュウニズム】攻略wiki | Gamerch</a>
+          /
+          <a href="https://wikiwiki.jp/chunithmwiki/" target="_blank">CHUNITHM【チュウニズム】攻略wiki Wiki*</a>
           － {{ $t('page.about.sheetInfoDescription') }}
         </li>
         <li>
@@ -164,6 +166,17 @@ export default defineComponent({
           </i>
         </li>
       </template>
+      <template v-if="gameCode === 'ddr'">
+        <li>
+          {{ $t('page.about.songInfo') }} －
+          <a href="https://p.eagate.573.jp/game/ddr/ddra3/" target="_blank">DanceDanceRevolution A3</a>
+        </li>
+        <li>
+          {{ $t('page.about.sheetInfo') }} －
+          <a href="https://remywiki.com/AC_DDR_A3" target="_blank">DanceDanceRevolution A3 - RemyWiki</a>
+          － {{ $t('page.about.sheetInfoDescription') }}
+        </li>
+      </template>
       <template v-if="gameCode === 'drs'">
         <li>
           {{ $t('page.about.songInfo') }} －
@@ -197,6 +210,17 @@ export default defineComponent({
           － {{ $t('page.about.sheetInfoDescription') }}
         </li>
       </template>
+      <template v-if="gameCode === 'nostalgia'">
+        <li>
+          {{ $t('page.about.songInfo') }} －
+          <a href="https://p.eagate.573.jp/game/nostalgia/op3/" target="_blank">NOSTALGIA Op.3</a>
+        </li>
+        <li>
+          {{ $t('page.about.sheetInfo') }} －
+          <a href="https://remywiki.com/AC_NST" target="_blank">ノスタルジア - RemyWiki</a>
+          － {{ $t('page.about.sheetInfoDescription') }}
+        </li>
+      </template>
       <template v-if="gameCode === 'diva'">
         <li>
           {{ $t('page.about.songInfo') }} －
@@ -205,6 +229,17 @@ export default defineComponent({
         <li>
           {{ $t('page.about.sheetInfo') }} －
           <a href="https://w.atwiki.jp/projectdiva_ac/" target="_blank">Project DIVA Arcade @ wiki - atwiki（アットウィキ）</a>
+          － {{ $t('page.about.sheetInfoDescription') }}
+        </li>
+      </template>
+      <template v-if="gameCode === 'crossbeats'">
+        <li>
+          {{ $t('page.about.songInfo') }} －
+          <a href="https://www.capcom.co.jp/arcade/rev/PC/" target="_blank">CAPCOM：crossbeats REV. SUNRISE公式サイト</a>
+        </li>
+        <li>
+          {{ $t('page.about.sheetInfo') }} －
+          <a href="https://crossbeatsrev.wiki.fc2.com/" target="_blank">crossbeats REV.Wiki</a>
           － {{ $t('page.about.sheetInfoDescription') }}
         </li>
       </template>
@@ -233,6 +268,66 @@ export default defineComponent({
 
     <h3>{{ $t('page.about.updateRecord') }}</h3>
     <v-timeline dense align-top class="mt-2">
+      <v-timeline-item icon="mdi-star">
+        <span class="font-weight-bold">2023/11/20－ v3.11 Update</span>
+        <ul>
+          <li>
+            project: add new site for <strong>crossbeats REV.</strong>
+            >> <a href="https://arcade-songs.zetaraku.dev/crossbeats/" target="_blank">crossbeats REV. | arcade-songs</a>
+          </li>
+          <li><i>Such marvelous songs deserve to be preserved and remembered ...</i></li>
+        </ul>
+      </v-timeline-item>
+      <v-timeline-item small color="grey">
+        <span class="font-weight-bold">2023/11/06 － v3.10.1 Update</span>
+        <ul>
+          <li>
+            bugfix: (Grid View / Sheet Dialog) prevent displaying mismatched cover images when loading
+          </li>
+        </ul>
+      </v-timeline-item>
+      <v-timeline-item icon="mdi-flag-variant">
+        <span class="font-weight-bold">2023/10/06 － 200000 visits reached</span>
+        <ul>
+          <li>
+            milestone: 200000 visits reached on <a href="https://arcade-songs.zetaraku.dev/maimai/" target="_blank">arcade-songs/maimai</a>!
+          </li>
+        </ul>
+      </v-timeline-item>
+      <v-timeline-item icon="mdi-flag-variant">
+        <span class="font-weight-bold">2023/07/29 － 150000 visits reached</span>
+        <ul>
+          <li>
+            milestone: 150000 visits reached on <a href="https://arcade-songs.zetaraku.dev/maimai/" target="_blank">arcade-songs/maimai</a>!
+          </li>
+        </ul>
+      </v-timeline-item>
+      <v-timeline-item>
+        <span class="font-weight-bold">2023/07/20－ v3.10 Update</span>
+        <ul>
+          <li>
+            feature: add sheet information (Notes Designer, Note Counts) for <strong>CHUNITHM</strong>
+          </li>
+        </ul>
+      </v-timeline-item>
+      <v-timeline-item icon="mdi-star">
+        <span class="font-weight-bold">2023/07/09－ v3.9 Update</span>
+        <ul>
+          <li>
+            project: add new site for <strong>NOSTALGIA</strong>
+            >> <a href="https://arcade-songs.zetaraku.dev/nostalgia/" target="_blank">NOSTALGIA | arcade-songs</a>
+          </li>
+        </ul>
+      </v-timeline-item>
+      <v-timeline-item icon="mdi-star">
+        <span class="font-weight-bold">2023/07/03－ v3.8 Update</span>
+        <ul>
+          <li>
+            project: add new site for <strong>DanceDanceRevolution</strong>
+            >> <a href="https://arcade-songs.zetaraku.dev/ddr/" target="_blank">DanceDanceRevolution | arcade-songs</a>
+          </li>
+        </ul>
+      </v-timeline-item>
       <v-timeline-item icon="mdi-flag-variant">
         <span class="font-weight-bold">2023/04/08 － 100000 visits reached</span>
         <ul>
@@ -725,7 +820,7 @@ export default defineComponent({
       <v-timeline-item icon="mdi-alpha" color="red">
         <span class="font-weight-bold">2020/07/27 － v0.0.1 Project Started</span>
         <ul>
-          <li><i>This project was devoted to my friends...</i></li>
+          <li><i>This project was devoted to my friends ...</i></li>
         </ul>
       </v-timeline-item>
     </v-timeline>
@@ -804,6 +899,16 @@ export default defineComponent({
           <strong>オンゲキ</strong> or <strong>SEGA Interactive Co., Ltd.</strong>
         </li>
       </template>
+      <template v-if="gameCode === 'ddr'">
+        <li>
+          <strong>DanceDanceRevolution</strong> and <strong>ダンスダンスレボリューション</strong>
+          are trademarks of <strong>Konami Amusement Co., Ltd.</strong>
+        </li>
+        <li>
+          This site is not associated or officially connected with
+          <strong>DanceDanceRevolution</strong> or <strong>Konami Amusement Co., Ltd.</strong>
+        </li>
+      </template>
       <template v-if="gameCode === 'drs'">
         <li>
           <strong>DANCERUSH STARDOM</strong> and <strong>ダンスラッシュ</strong>
@@ -834,6 +939,16 @@ export default defineComponent({
           <strong>pop'n music</strong> or <strong>Konami Amusement Co., Ltd.</strong>
         </li>
       </template>
+      <template v-if="gameCode === 'nostalgia'">
+        <li>
+          <strong>NOSTALGIA</strong> and <strong>ノスタルジア</strong>
+          are trademarks of <strong>Konami Amusement Co., Ltd.</strong>
+        </li>
+        <li>
+          This site is not associated or officially connected with
+          <strong>NOSTALGIA</strong> or <strong>Konami Amusement Co., Ltd.</strong>
+        </li>
+      </template>
       <template v-if="gameCode === 'diva'">
         <li>
           <strong>Project DIVA Arcade</strong> and <strong>Future Tone</strong>
@@ -842,6 +957,16 @@ export default defineComponent({
         <li>
           This site is not associated or officially connected with
           <strong>Project DIVA Arcade</strong> or <strong>SEGA Interactive Co., Ltd.</strong>
+        </li>
+      </template>
+      <template v-if="gameCode === 'crossbeats'">
+        <li>
+          <strong>crossbeats REV.</strong> and <strong>クロスビーツレヴ</strong>
+          are trademarks of <strong>Capcom Co., Ltd.</strong>
+        </li>
+        <li>
+          This site is not associated or officially connected with
+          <strong>crossbeats REV.</strong> or <strong>Capcom Co., Ltd.</strong>
         </li>
       </template>
       <li>

@@ -1,4 +1,5 @@
-import { computeSheetExpr } from '~/utils/sheet';
+import { markRaw } from '@nuxtjs/composition-api';
+import { computeSheetExpr, validateNoteCounts } from '~/utils/sheet';
 import type { Data } from '~/types';
 
 export function buildEmptyData(): Data {
@@ -20,7 +21,7 @@ export function buildEmptyData(): Data {
   };
 }
 
-export function preprocessData(data: Data, dataSourceUrl: string) {
+export function preprocessData(data: Data, dataSourceUrl: string, gameCode: string) {
   function resolveUrl(filePath: string | undefined, baseUrl: string) {
     return filePath != null ? new URL(filePath, baseUrl).toString() : filePath;
   }
@@ -46,17 +47,37 @@ export function preprocessData(data: Data, dataSourceUrl: string) {
 
       sheet.sheetExpr = computeSheetExpr(sheet);
       sheet.notePercents = computeNotePercentages(sheet.noteCounts);
+
+      if (!validateNoteCounts(sheet, gameCode)) {
+        console.warn('Invalid note counts:', sheet.sheetExpr, sheet.noteCounts);
+      }
+
+      markRaw(sheet);
     }
+
+    markRaw(song);
   }
 
   data.songs.reverse();
+
   // eslint-disable-next-line no-param-reassign
   data.sheets = data.songs.flatMap((song) => song.sheets);
 
+  for (const category of data.categories) {
+    markRaw(category);
+  }
+  for (const version of data.versions) {
+    markRaw(version);
+  }
   for (const type of data.types) {
     type.iconUrl = resolveUrl(type.iconUrl, `${dataSourceUrl}/img/`);
+    markRaw(type);
   }
   for (const difficulty of data.difficulties) {
     difficulty.iconUrl = resolveUrl(difficulty.iconUrl!, `${dataSourceUrl}/img/`);
+    markRaw(difficulty);
+  }
+  for (const region of data.regions) {
+    markRaw(region);
   }
 }

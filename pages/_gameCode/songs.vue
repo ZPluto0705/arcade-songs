@@ -1,14 +1,13 @@
 <script setup lang="ts">
 /* eslint-disable import/first, import/no-duplicates */
-import { ref, computed, useMeta as useHead, ComputedRef } from '@nuxtjs/composition-api';
-import { useI18n } from 'nuxt-i18n-composable';
-import useDataStore from '~/stores/data';
+import { ref, computed, useMeta as useHead, useContext, ComputedRef } from '@nuxtjs/composition-api';
+import { useDataStore } from '~/stores/data';
 import useGameInfo from '~/composables/useGameInfo';
 import useGameData from '~/composables/useGameData';
 import useSheetDialog from '~/composables/useSheetDialog';
 import type { DataTableHeader } from 'vuetify';
 
-const i18n = useI18n();
+const context = useContext();
 const dataStore = useDataStore();
 const { gameCode } = useGameInfo();
 const {
@@ -30,36 +29,36 @@ const headers: ComputedRef<DataTableHeader[]> = computed(() => [
     searchable: false,
   },
   {
-    text: i18n.t('term.category') as string,
+    text: context.i18n.t('term.category') as string,
     value: 'category',
     width: 150,
     sort: (a: string, b: string) => getCategoryIndex(a) - getCategoryIndex(b),
     searchable: false,
   },
   {
-    text: i18n.t('term.title') as string,
+    text: context.i18n.t('term.title') as string,
     value: 'title',
     width: 250,
   },
   {
-    text: i18n.t('term.artist') as string,
+    text: context.i18n.t('term.artist') as string,
     value: 'artist',
     width: 250,
   },
   {
-    text: i18n.t('term.sheets') as string,
+    text: context.i18n.t('term.sheets') as string,
     value: 'sheets',
     width: 350,
     searchable: false,
   },
   {
-    text: i18n.t('term.bpm') as string,
+    text: context.i18n.t('term.bpm') as string,
     value: 'bpm',
     width: 50,
     searchable: false,
   },
   {
-    text: i18n.t('term.version') as string,
+    text: context.i18n.t('term.version') as string,
     value: 'version',
     width: 200,
     sort: (a: string, b: string) => getVersionIndex(a) - getVersionIndex(b),
@@ -68,7 +67,7 @@ const headers: ComputedRef<DataTableHeader[]> = computed(() => [
 ]);
 
 useHead(() => ({
-  title: i18n.t('page-title.songs') as string,
+  title: context.i18n.t('page-title.songs') as string,
 }));
 </script>
 
@@ -110,7 +109,7 @@ export default defineComponent({
       </template>
 
       <template #item.category="{ item: song }">
-        <span>{{ (song.category || '').replaceAll('|', '｜') }}</span>
+        <span>{{ (song.category ?? '').replaceAll('|', '｜') }}</span>
       </template>
       <template #item.title="{ item: song }">
         <router-link

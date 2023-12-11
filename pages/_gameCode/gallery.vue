@@ -1,14 +1,15 @@
 <script setup lang="ts">
 /* eslint-disable import/first, import/no-duplicates */
-import { ref, computed, watch, inject, onMounted, useRoute, useRouter, useMeta as useHead, Ref } from '@nuxtjs/composition-api';
-import { useI18n } from 'nuxt-i18n-composable';
+import { ref, computed, watch, inject, onMounted, useRoute, useRouter, useMeta as useHead, useContext, Ref } from '@nuxtjs/composition-api';
 import { until } from '@vueuse/core';
 import YAML from 'yaml';
 import selectFiles from 'select-files';
-import useDataStore from '~/stores/data';
+import { useDataStore } from '~/stores/data';
 import useGtag from '~/composables/useGtag';
 import useGameInfo from '~/composables/useGameInfo';
 import useSheetDialog from '~/composables/useSheetDialog';
+import LoadingOverlay from '~/components/LoadingOverlay.vue';
+import SheetTile from '~/components/SheetTile.vue';
 import LoadingStatus from '~/enums/LoadingStatus';
 import sites from '~/data/sites.json';
 import { buildGallery, isValidUrl } from '~/utils';
@@ -16,7 +17,7 @@ import type { Gallery, GalleryList } from '~/types';
 
 const isDarkMode: Ref<boolean> = inject('isDarkMode')!;
 
-const i18n = useI18n();
+const context = useContext();
 const gtag = useGtag();
 const route = useRoute();
 const router = useRouter();
@@ -175,8 +176,8 @@ async function changeGalleryProvider(providerType: string) {
 useHead(() => ({
   title: (
     currentList.value !== null
-      ? `${currentList.value.title} | ${i18n.t('page-title.gallery')}`
-      : i18n.t('page-title.gallery') as string
+      ? `${currentList.value.title} | ${context.i18n.t('page-title.gallery')}`
+      : context.i18n.t('page-title.gallery') as string
   ),
 }));
 

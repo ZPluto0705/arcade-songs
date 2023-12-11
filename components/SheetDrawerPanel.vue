@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, inject, ComputedRef } from '@nuxtjs/composition-api';
-import { useI18n } from 'nuxt-i18n-composable';
+import { ref, watch, inject, ComputedRef, useContext } from '@nuxtjs/composition-api';
 import useGtag from '~/composables/useGtag';
 import useGameInfo from '~/composables/useGameInfo';
 import useSheetDialog from '~/composables/useSheetDialog';
@@ -9,7 +8,7 @@ import type { Sheet } from '~/types';
 
 const drawingPool: ComputedRef<Sheet[]> = inject('drawingPool')!;
 
-const i18n = useI18n();
+const context = useContext();
 const gtag = useGtag();
 const { gameCode, themeColor } = useGameInfo();
 const {
@@ -28,7 +27,7 @@ const drawModeIndex = ref(0);
 async function drawSheet() {
   if (drawingPool.value.length === 0) {
     // eslint-disable-next-line no-alert
-    window.alert(i18n.t('description.drawPoolEmpty'));
+    window.alert(context.i18n.t('description.drawPoolEmpty'));
     return;
   }
 
@@ -42,7 +41,7 @@ async function drawSheet() {
 async function drawSheetCombo() {
   if (drawingPool.value.length === 0) {
     // eslint-disable-next-line no-alert
-    window.alert(i18n.t('description.drawPoolEmpty'));
+    window.alert(context.i18n.t('description.drawPoolEmpty'));
     return;
   }
 
